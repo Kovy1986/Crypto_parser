@@ -6,7 +6,8 @@ import datetime
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
-
+import pathlib
+from PIL import Image, ImageTk
 
 # -----------------------------------------------------
 def get_exchange_rate(): # Функция, с помощью которой делается запрос и получается обменный курс криптовалюты
@@ -220,6 +221,13 @@ window = Tk()
 window.title('Курсы обмена валют')
 window.geometry('400x170')
 window.resizable(False, False)
+
+current_dir = pathlib.Path(__file__).parent # Получаем директорию текущего файла
+ico_path = 'ico.png' # Определяем относительный путь к иконке приложения
+ico_absolute_path = current_dir / ico_path # Конструируем абсолютный путь к файлам
+image_ico = Image.open(ico_absolute_path) # Открываем изображение с помощью PIL
+ico_image = ImageTk.PhotoImage(image_ico) # Преобразовываем изображение в формат .ico
+window.iconphoto(True, ico_image) # Устанавливаем иконку с помощью метода iconphoto
 # -----------------------------------------------------
 # Словарь с основными криптовалютами
 crypto_list = {
