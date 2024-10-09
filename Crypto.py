@@ -95,7 +95,7 @@ def market_data(): # Функция, которая запускает сбор 
     if crypto_name and cur_name:
         try:
             new_window = Toplevel(window)
-            new_window.title('Продвинутые данные')
+            new_window.title('Базовые метрики')
             new_window.geometry('400x270')
             new_window.resizable(False, False)
 
@@ -218,7 +218,7 @@ def chart_drawing(): # Функция запускает процесс отри
 # -----------------------------------------------------
 # Создаём и настраиваем главный виджет
 window = Tk()
-window.title('Курсы обмена валют')
+window.title('Crypto')
 window.geometry('400x170')
 window.resizable(False, False)
 
@@ -282,7 +282,7 @@ window.config(menu=menu_bar)
 
 file_menu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label='Файл', menu=file_menu)
-file_menu.add_command(label='Рыночные данные', command=market_data)
+file_menu.add_command(label='Информация о крипте', command=market_data)
 file_menu.add_separator()
 file_menu.add_command(label='Выход', command=exit_)
 # -----------------------------------------------------
