@@ -19,12 +19,12 @@ def get_exchange_rate(): # Функция, с помощью которой де
             crypto_id, cur_id = crypto_list[crypto_name], cur_list[cur_name]
 
             # Отправляем GET-запрос
-            responce = requests.get(f'https://api.coingecko.com/api/v3/simple/'
+            response = requests.get(f'https://api.coingecko.com/api/v3/simple/'
                                     f'price?ids={crypto_id}&vs_currencies={cur_id}')
 
             # Проверяем успешность запроса
-            responce.raise_for_status()
-            data = responce.json()
+            response.raise_for_status()
+            data = response.json()
 
             # С помощью ключей с id-криптовалюты и id-валюты, присваиваем переменной обменный курс
             cur_rate = data[crypto_id][cur_id]
