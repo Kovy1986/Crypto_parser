@@ -104,12 +104,13 @@ def market_data(): # Функция, которая запускает сбор 
 
     if crypto_name and cur_name:
         try:
+            table = coin_market_data() # Вызываем функцию для сбора метрик и получаем из неё таблицу в DataFrame
+
             new_window = Toplevel(window)
             new_window.title('Базовые метрики')
             new_window.geometry('400x270')
             new_window.resizable(False, False)
 
-            table = coin_market_data() # Вызываем функцию для сбора метрик и получаем из неё таблицу в DataFrame
             tree = ttk.Treeview(new_window) # Создаём таблицу в tkinter
             tree["columns"] = ("Метрика", "Значение") # Определяем столбцы таблицы
 
@@ -135,6 +136,8 @@ def market_data(): # Функция, которая запускает сбор 
             button = Button(new_window, text=f'Динамика курса {crypto_name} в течение года', command=chart_drawing)
             button.pack(pady=10)
         except Exception as e:
+            if new_window:
+                new_window.destroy()
             mb.showerror('Ошибка', f'Произошла ошибка {e}')
     else:
         mb.showwarning('Внимание!',
@@ -226,6 +229,16 @@ def chart_drawing(): # Функция запускает процесс отри
 
 
 # -----------------------------------------------------
+def excel_parse(): # Функция, которая берёт id и названия криптовалют из Excel-файла и возвращает словарь
+    df = pd.read_excel('CoinGecko Token API List.xlsx', sheet_name='CoinGecko Token API List', engine='openpyxl')
+    coin_id = df['Id (API id)'].tolist()
+    coin_name = df['Name'].tolist()
+    dictionary = {k: v for k, v in zip(coin_name, coin_id)}
+
+    return dictionary
+
+
+# -----------------------------------------------------
 # Создаём и настраиваем главный виджет
 window = Tk()
 window.title('Crypto_py')
@@ -240,7 +253,7 @@ ico_image = ImageTk.PhotoImage(image_ico) # Преобразовываем из�
 window.iconphoto(True, ico_image) # Устанавливаем иконку с помощью метода iconphoto
 # -----------------------------------------------------
 # Словарь с основными криптовалютами
-crypto_list = {
+'''crypto_list = {
     'Bitcoin': 'bitcoin',
     'Ethereum': 'ethereum',
     'Ripple': 'ripple',
@@ -251,7 +264,8 @@ crypto_list = {
     'Stellar': 'stellar',
     'Monero': 'monero',
     'NEM': 'nem'
-}
+}'''
+crypto_list = excel_parse()
 # -----------------------------------------------------
 # Словарь с основными денежными валютами
 cur_list = {
