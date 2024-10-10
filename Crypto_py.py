@@ -230,12 +230,29 @@ def chart_drawing(): # Функция запускает процесс отри
 
 # -----------------------------------------------------
 def excel_parse(): # Функция, которая берёт id и названия криптовалют из Excel-файла и возвращает словарь
-    df = pd.read_excel('CoinGecko Token API List.xlsx', sheet_name='CoinGecko Token API List', engine='openpyxl')
-    coin_id = df['Id (API id)'].tolist()
-    coin_name = df['Name'].tolist()
-    dictionary = {k: v for k, v in zip(coin_name, coin_id)}
+    try:
+        df = pd.read_excel('CoinGecko Token API List.xlsx',
+                           sheet_name='CoinGecko Token API List', engine='openpyxl')
+        coin_id = df['Id (API id)'].tolist()
+        coin_name = df['Name'].tolist()
+        dictionary = {k: v for k, v in zip(coin_name, coin_id)}
 
-    return dictionary
+        return dictionary
+    except Exception as e:
+        dictionary = {
+            'Bitcoin': 'bitcoin',
+            'Ethereum': 'ethereum',
+            'Ripple': 'ripple',
+            'Litecoin': 'litecoin',
+            'Cardano': 'cardano',
+            'Binance Coin': 'binancecoin',
+            'Tether': 'tether',
+            'Stellar': 'stellar',
+            'Monero': 'monero',
+            'NEM': 'nem'}
+        mb.showerror('Ошибка', f'Произошла ошибка {e}. Словарь с базой криптовалют не загружен')
+
+        return dictionary
 
 
 # -----------------------------------------------------
@@ -253,18 +270,6 @@ ico_image = ImageTk.PhotoImage(image_ico) # Преобразовываем из�
 window.iconphoto(True, ico_image) # Устанавливаем иконку с помощью метода iconphoto
 # -----------------------------------------------------
 # Словарь с основными криптовалютами
-'''crypto_list = {
-    'Bitcoin': 'bitcoin',
-    'Ethereum': 'ethereum',
-    'Ripple': 'ripple',
-    'Litecoin': 'litecoin',
-    'Cardano': 'cardano',
-    'Binance Coin': 'binancecoin',
-    'Tether': 'tether',
-    'Stellar': 'stellar',
-    'Monero': 'monero',
-    'NEM': 'nem'
-}'''
 crypto_list = excel_parse()
 # -----------------------------------------------------
 # Словарь с основными денежными валютами
