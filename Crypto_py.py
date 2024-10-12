@@ -229,17 +229,23 @@ def chart_drawing(): # Функция запускает процесс отри
 
 
 # -----------------------------------------------------
-def excel_parse(): # Функция, которая берёт id и названия криптовалют из Excel-файла и возвращает словарь
+def excel_parse(): # Функция, которая импортирует данные о валютах и криптовалютах из Excel-файла и возвращает словари
     try:
         df = pd.read_excel('CoinGecko Token API List.xlsx',
-                           sheet_name='CoinGecko Token API List', engine='openpyxl')
+                           sheet_name='Token API List', engine='openpyxl')
         coin_id = df['Id (API id)'].tolist()
         coin_name = df['Name'].tolist()
-        dictionary = {k: v for k, v in zip(coin_name, coin_id)}
+        coin_dict = {k: v for k, v in zip(coin_name, coin_id)}
 
-        return dictionary
+        df2 = pd.read_excel('CoinGecko Token API List.xlsx',
+                           sheet_name='Currency List', engine='openpyxl')
+        cur_symbol = df2['Symbol'].tolist()
+        cur_name = df2['Name'].tolist()
+        cur_dict = {k: v for k, v in zip(cur_name, cur_symbol)}
+
+        return coin_dict, cur_dict
     except Exception as e:
-        dictionary = {
+        coin_dict = {
             'Bitcoin': 'bitcoin',
             'Ethereum': 'ethereum',
             'Ripple': 'ripple',
@@ -249,17 +255,24 @@ def excel_parse(): # Функция, которая берёт id и назва�
             'Tether': 'tether',
             'Stellar': 'stellar',
             'Monero': 'monero',
-            'NEM': 'nem'}
-        mb.showerror('Ошибка', f'Произошла ошибка {e}. Словарь с базой криптовалют не загружен')
+            'NEM': 'nem'
+        }
+        cur_dict = {
+            'Российский рубль': 'rub',
+            'Доллар США': 'usd',
+            'Евро': 'eur',
+            'Китайский юань': 'cny'
+        }
+        mb.showerror('Ошибка', f'Произошла ошибка {e}. Словари с базой валют и криптовалют не загружены')
 
-        return dictionary
+        return coin_dict, cur_dict
 
 
 # -----------------------------------------------------
 # Создаём и настраиваем главный виджет
 window = Tk()
 window.title('Crypto_py')
-window.geometry('400x170')
+window.geometry('450x170')
 window.resizable(False, False)
 
 current_dir = pathlib.Path(__file__).parent # Получаем директорию текущего файла
@@ -269,16 +282,8 @@ image_ico = Image.open(ico_absolute_path) # Открываем изображе�
 ico_image = ImageTk.PhotoImage(image_ico) # Преобразовываем изображение в формат .ico
 window.iconphoto(True, ico_image) # Устанавливаем иконку с помощью метода iconphoto
 # -----------------------------------------------------
-# Словарь с основными криптовалютами
-crypto_list = excel_parse()
-# -----------------------------------------------------
-# Словарь с основными денежными валютами
-cur_list = {
-    'Российский рубль': 'rub',
-    'Доллар США': 'usd',
-    'Евро': 'eur',
-    'Китайский юань': 'cny'
-}
+# Загружаем данные с основными валютами и криптовалютами
+crypto_list, cur_list = excel_parse()[0], excel_parse()[1]
 # -----------------------------------------------------
 # Создаём интерфейс
 # Настройки текстовых меток
@@ -292,12 +297,12 @@ cur_rate_lbl = Label(text='', font=('SegoeUI', 12, 'bold'), fg='red')
 cur_rate_lbl.grid(row=1, column=1, rowspan=2, sticky='S', padx=(25, 0), pady=(10, 10))
 # -----------------------------------------------------
 # Настройки выпадающего списка с криптой
-crypto_combo = ttk.Combobox(values=list(crypto_list.keys()))
+crypto_combo = ttk.Combobox(width=28, values=list(crypto_list.keys()))
 crypto_combo.grid(row=1, column=0, padx=(20, 0), pady=(0, 20))
 crypto_combo.set(value='Bitcoin')
 # -----------------------------------------------------
 # Настройки выпадающего списка с валютой
-cur_combo = ttk.Combobox(values=list(cur_list.keys()))
+cur_combo = ttk.Combobox(width=28, values=list(cur_list.keys()))
 cur_combo.grid(row=4, column=0, padx=(20, 0))
 cur_combo.set(value='Доллар США')
 # -----------------------------------------------------
