@@ -82,7 +82,6 @@ def coin_market_data(): # Функция, которая собирает и в�
             # Изменение по сравнению с минимальной исторической стоимостью
             atl_change_percentage = f'{data[0]['atl_change_percentage']:.1f}%'
 
-
             # Создаем таблицу с данными
             table = pd.DataFrame({
                 'Метрика': ['Рыночная капитализация', 'Динамика капитализации за сутки', 'Ранг рыночной капитализации',
@@ -237,14 +236,12 @@ def chart_drawing(): # Функция запускает процесс отри
 # -----------------------------------------------------
 def excel_parse(): # Функция, которая импортирует данные о валютах и криптовалютах из Excel-файла и возвращает словари
     try:
-        df = pd.read_excel('CoinGecko Token API List.xlsx',
-                           sheet_name='Token API List', engine='openpyxl')
+        df = pd.read_excel('Data.xlsx', sheet_name='Token API List', engine='openpyxl')
         coin_id = df['Id (API id)'].tolist()
         coin_name = df['Name'].tolist()
         coin_dict = {k: v for k, v in zip(coin_name, coin_id)}
 
-        df2 = pd.read_excel('CoinGecko Token API List.xlsx',
-                           sheet_name='Currency List', engine='openpyxl')
+        df2 = pd.read_excel('Data.xlsx', sheet_name='Currency List', engine='openpyxl')
         cur_symbol = df2['Symbol'].tolist()
         cur_name = df2['Name'].tolist()
         cur_dict = {k: v for k, v in zip(cur_name, cur_symbol)}
