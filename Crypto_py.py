@@ -69,31 +69,75 @@ def coin_market_data(): # Функция, которая собирает и в�
             responce.raise_for_status()
             data = responce.json()
 
-            market_cap = f'{data[0]['market_cap']} {cur_id.upper()}' # Рыночная капитализация
-            # Изменение капитализации за сутки в процентах
-            f_market_cap_change_perc = f'{data[0]['market_cap_change_percentage_24h']:.3f}%'
-
-            mcr = data[0]['market_cap_rank'] # Обрабатываем значение ранга рыночной капитализации
-            if mcr == None:
-                market_cap_rank = 'Отсутствует'
+            # Рыночная капитализация
+            mc = data[0]['market_cap']
+            if mc != None:
+                market_cap = f'{mc} {cur_id.upper()}'
             else:
-                market_cap_rank = f'{mcr} место' #Ранг рыночной капитализации
+                market_cap = 'н/д'
 
-            total_volume = f'{data[0]['total_volume']} {cur_id.upper()}' # Общий объём
-            circulating_supply = f'{data[0]['circulating_supply']:.1f} {cur_id.upper()}'  # Циркулирующий запас
-            ath = f'{data[0]['ath']} {cur_id.upper()}'  # Наибольшая историческая стоимость
+            # Изменение капитализации за сутки в процентах
+            mccp = data[0]['market_cap_change_percentage_24h']
+            if mccp != None:
+                market_cap_change_perc = f'{mccp:.3f}%'
+            else:
+                market_cap_change_perc = 'н/д'
+
+            # Ранг рыночной капитализации
+            mcr = data[0]['market_cap_rank']
+            if mcr != None:
+                market_cap_rank = f'{mcr} место'
+            else:
+                market_cap_rank = 'н/д'
+
+            # Общий объём
+            tv = data[0]['total_volume']
+            if tv != None:
+                total_volume = f'{tv} {cur_id.upper()}'
+            else:
+                total_volume = 'н/д'
+
+            # Циркулирующий запас
+            cs = data[0]['circulating_supply']
+            if cs != None:
+                circulating_supply = f'{cs:.1f} {cur_id.upper()}'
+            else:
+                circulating_supply = 'н/д'
+
+            # Наибольшая историческая стоимость
+            ath_ = data[0]['ath']
+            if ath_ != None:
+                ath = f'{ath_} {cur_id.upper()}'
+            else:
+                ath = 'н/д'
+
             # Изменение по сравнению с максимальной исторической стоимостью
-            ath_change_percentage = f'{data[0]['ath_change_percentage']:.1f}%'
-            atl = f'{data[0]['atl']} {cur_id.upper()}'  # Наименьшая историческая стоимость
+            atccp = data[0]['ath_change_percentage']
+            if atccp != None:
+                ath_change_percentage = f'{atccp:.1f}%'
+            else:
+                ath_change_percentage = 'н/д'
+
+            # Наименьшая историческая стоимость
+            atl_ = data[0]['atl']
+            if atl_ != None:
+                atl = f'{atl_} {cur_id.upper()}'
+            else:
+                atl = 'н/д'
+
             # Изменение по сравнению с минимальной исторической стоимостью
-            atl_change_percentage = f'{data[0]['atl_change_percentage']:.1f}%'
+            atlcp = data[0]['atl_change_percentage']
+            if atlcp != None:
+                atl_change_percentage = f'{atlcp:.1f}%'
+            else:
+                atl_change_percentage = 'н/д'
 
             # Создаем таблицу с данными
             table = pd.DataFrame({
                 'Метрика': ['Рыночная капитализация', 'Динамика капитализации за сутки', 'Ранг рыночной капитализации',
                             'Общий объём', 'Циркулирующий запас', 'Максимальная цена', 'Разница с макс. ценой',
                             'Минимальная цена', 'Разница с мин. ценой'],
-                'Значение': [market_cap, f_market_cap_change_perc, market_cap_rank, total_volume,
+                'Значение': [market_cap, market_cap_change_perc, market_cap_rank, total_volume,
                              circulating_supply, ath, ath_change_percentage, atl, atl_change_percentage]
             })
 
