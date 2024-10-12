@@ -66,15 +66,21 @@ def coin_market_data(): # Функция, которая собирает и в�
             market_cap = f'{data[0]['market_cap']} {cur_id.upper()}' # Рыночная капитализация
             # Изменение капитализации за сутки в процентах
             f_market_cap_change_perc = f'{data[0]['market_cap_change_percentage_24h']:.3f}%'
-            market_cap_rank = f'{data[0]['market_cap_rank']} место' #Ранг рыночной капитализации
+
+            mcr = data[0]['market_cap_rank'] # Обрабатываем значение ранга рыночной капитализации
+            if mcr == None:
+                market_cap_rank = 'Отсутствует'
+            else:
+                market_cap_rank = f'{mcr} место' #Ранг рыночной капитализации
+
             total_volume = f'{data[0]['total_volume']} {cur_id.upper()}' # Общий объём
             circulating_supply = f'{data[0]['circulating_supply']:.1f} {cur_id.upper()}'  # Циркулирующий запас
             ath = f'{data[0]['ath']} {cur_id.upper()}'  # Наибольшая историческая стоимость
             # Изменение по сравнению с максимальной исторической стоимостью
-            ath_change_percentage = f'{data[0]['ath_change_percentage']:.3f}%'
+            ath_change_percentage = f'{data[0]['ath_change_percentage']:.1f}%'
             atl = f'{data[0]['atl']} {cur_id.upper()}'  # Наименьшая историческая стоимость
             # Изменение по сравнению с минимальной исторической стоимостью
-            atl_change_percentage = f'{data[0]['atl_change_percentage']:.3f}%'
+            atl_change_percentage = f'{data[0]['atl_change_percentage']:.1f}%'
 
 
             # Создаем таблицу с данными
