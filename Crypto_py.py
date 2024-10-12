@@ -8,6 +8,7 @@ import matplotlib.dates as mdates
 import pandas as pd
 import pathlib
 from PIL import Image, ImageTk
+from bs4 import BeautifulSoup as Soup
 
 # -----------------------------------------------------
 def get_exchange_rate():
@@ -40,7 +41,6 @@ def get_exchange_rate():
 
         except Exception as e:
             mb.showerror('Ошибка', f'Произошла ошибка {e}')
-
     else:
         mb.showwarning('Внимание!',
                        'Выберите необходимые данные из выпадающих списков')
@@ -146,6 +146,8 @@ def market_data(): # Функция, которая запускает сбор 
             # Создаём кнопку для вывода графика matplotlib
             button = Button(new_window, text=f'Динамика курса {crypto_name} в течение года', command=chart_drawing)
             button.pack(pady=10)
+
+            coin_info() # Запускаем функцию с описанием криптовалюты
         except Exception as e:
             if new_window:
                 new_window.destroy()
@@ -154,6 +156,31 @@ def market_data(): # Функция, которая запускает сбор 
         mb.showwarning('Внимание!',
                        'Выберите необходимые данные из выпадающих списков')
 
+
+# -----------------------------------------------------
+def coin_info(): # Функция, которая получает общую информацию о криптовалюте
+    crypto_name = crypto_combo.get()
+    cur_name = cur_combo.get()
+
+    if crypto_name and cur_name:
+        try:
+            crypto_id, cur_id = crypto_list[crypto_name], cur_list[cur_name]
+
+            # Отправляем GET-запрос
+            response = requests.get(f'https://api.coingecko.com/api/v3/coins/{crypto_id}')
+
+            # Проверяем успешность запроса
+            response.raise_for_status()
+            data = response.json()
+            raw_text = data['description']['en']
+            soup = Soup(raw_text, 'html.parser')
+            plain_text = soup.get_text()
+            mb.showinfo(f'Информация о {crypto_name} с сайта https://coingecko.com', plain_text)
+        except Exception as e:
+            mb.showerror('Ошибка', f'Произошла ошибка {e}')
+    else:
+        mb.showwarning('Внимание!',
+                       'Выберите необходимые данные из выпадающих списков')
 
 # -----------------------------------------------------
 def date_transformer(timestamp): # Функция, которая преобразует дату из формата Unix
