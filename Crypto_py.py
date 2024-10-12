@@ -28,8 +28,14 @@ def get_exchange_rate():
             data = response.json()
 
             # С помощью ключей с id-криптовалюты и id-валюты, присваиваем переменной обменный курс
-            cur_rate = data[crypto_id][cur_id]
-            text = f'За один {crypto_name}\n {cur_rate} {cur_id.upper()}'
+            cur_rate = data[crypto_id].get(cur_id)
+            # Метод .get позволяет избежать ошибки KeyValue при попытке обратиться к несуществующему ключу
+
+            if cur_rate != None:
+                text = f'За один {crypto_name}\n {cur_rate} {cur_id.upper()}'
+            else:
+                text = f'{crypto_name}\n не обменивается сейчас'
+
             cur_rate_lbl.config(text=text) # Вставляем стоимость крипты в текстовую метку
 
         except Exception as e:
