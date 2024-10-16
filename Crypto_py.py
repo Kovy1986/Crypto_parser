@@ -10,6 +10,7 @@ import pathlib
 from PIL import Image, ImageTk
 from bs4 import BeautifulSoup as Soup
 
+
 # -----------------------------------------------------
 def get_exchange_rate():
     # Функция, с помощью которой делается запрос и получается обменный курс криптовалюты
@@ -218,8 +219,9 @@ def coin_info(): # Функция, которая получает общую и
             data = response.json()
             raw_text = data['description']['en']
             soup = Soup(raw_text, 'html.parser')
-            plain_text = soup.get_text()
-            mb.showinfo(f'Информация о {crypto_name} с сайта https://coingecko.com', plain_text)
+            plain_text_en = soup.get_text()
+
+            mb.showinfo(f'Информация о {crypto_name} с сайта https://coingecko.com', plain_text_en)
         except Exception as e:
             mb.showerror('Ошибка', f'Произошла ошибка {e}')
     else:
